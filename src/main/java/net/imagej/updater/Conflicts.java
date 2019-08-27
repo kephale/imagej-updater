@@ -280,6 +280,7 @@ public class Conflicts {
 				for (final String name : files.prefix(file).getParentFile().list()) {
 					final String prefixed = prefix + name;
 					if (name.startsWith(baseName) && !file.filename.equals(prefixed) && file.getFilename(true).equals(FileObject.getFilename(prefixed, true))) {
+						System.out.println("Conflicting versions " + baseName + " " + prefix + " " + name + " " + prefixed);
 						conflicts.add(conflictingVersions(file, files.prefix(prefixed), prefixed));
 					}
 				}
