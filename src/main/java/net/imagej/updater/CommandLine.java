@@ -779,7 +779,8 @@ public class CommandLine {
 		if (list == null) {
 			throw die("Which files do you mean to upload?");
 		}
-		boolean forceUpdateSite = false, forceShadow = false, simulate = false, forgetMissingDeps = false;
+		boolean forceUpdateSite = false, forceShadow = false, simulate = false, forgetMissingDeps = false,
+				force = false;
 		String updateSite = null;
 		while (list.size() > 0 && list.get(0).startsWith("-")) {
 			final String option = list.remove(0);
@@ -793,6 +794,8 @@ public class CommandLine {
 				simulate = true;
 			} else if ("--force-shadow".equals(option)) {
 				forceShadow = true;
+			} else if ("--force".equals(option)) {
+				force = true;
 			} else if ("--forget-missing-dependencies".equals(option)) {
 				forgetMissingDeps = true;
 			} else {
@@ -814,11 +817,11 @@ public class CommandLine {
 				throw die("No file '" + name + "' found!");
 			}
 			if (file.getStatus() == Status.INSTALLED && (file.localFilename == null || file.localFilename.equals(file.filename))) {
-				if (forceShadow && !updateSite.equals(file.updateSite)) {
+				if ((forceShadow && !updateSite.equals(file.updateSite)) || force) {
 					// TODO: add overridden update site
 					file.updateSite = updateSite;
 					file.setStatus(Status.MODIFIED);
-					log.info("Uploading (force-shadow) '" + name
+					log.info("Uploading (force-shadow and/or force) '" + name
 							+ "' to site '" + updateSite + "'");
 				} else {
 					log.info("Skipping up-to-date " + name);
